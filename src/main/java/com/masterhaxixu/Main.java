@@ -32,24 +32,17 @@ public class Main extends JavaPlugin implements Listener {
             Snowball snowball = (Snowball) projectile;
 
             if (snowball.getShooter() instanceof Snowman) {
-                int totalSnowballCount = calculateTotalSnowballCount();
-                if (totalSnowballCount > config.getInt("snowballLimit")) {
-                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "minecraft:kill @e[type=snowball]");
-                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "minecraft:kill @e[type=snow_golem]");
+                int count = 0;
+
+                for (Entity entity : Bukkit.getWorlds().get(0).getEntities()) {
+                    if (entity instanceof Snowball) {
+                        if (count > config.getInt("snowballLimit")) {
+                            entity.remove();
+                        } else
+                            count++;
+                    }
                 }
             }
         }
-    }
-
-    private int calculateTotalSnowballCount() {
-        int count = 0;
-
-        for (Entity entity : Bukkit.getWorlds().get(0).getEntities()) {
-            if (entity instanceof Snowball) {
-                count++;
-            }
-        }
-
-        return count;
     }
 }
